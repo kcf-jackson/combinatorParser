@@ -1,0 +1,16 @@
+Package: combinatorParser
+Type: Package
+Title: Build parser with ease!
+Version: 0.2.0
+Author: Chun Fung (Jackson) Kwok
+Maintainer: Chun Fung (Jackson) Kwok <kcf.jackson@gmail.com>
+Description: An implementation of combinator parser in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests:
+    testthat
+RoxygenNote: 6.1.0
+Imports: curry,
+    glue,
+    purrr
