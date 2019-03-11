@@ -11,9 +11,7 @@ LazyData: true
 Suggests:
     testthat
 RoxygenNote: 6.1.1
-Imports: curry,
-    glue,
-    purrr
+Imports: 
 Collate: 
     'character_classes.R'
     'combinators.R'
