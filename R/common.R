@@ -1,1 +1,0 @@
-# [TODO] Applications: digits, lower, upper, whitespace
