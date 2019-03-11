@@ -1,7 +1,7 @@
 Package: combinatorParser
 Type: Package
 Title: Build parser with ease!
-Version: 0.2.0
+Version: 0.2.4
 Author: Chun Fung (Jackson) Kwok
 Maintainer: Chun Fung (Jackson) Kwok <kcf.jackson@gmail.com>
 Description: An implementation of combinator parser in R.
@@ -10,7 +10,13 @@ Encoding: UTF-8
 LazyData: true
 Suggests:
     testthat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Imports: curry,
     glue,
     purrr
+Collate: 
+    'character_classes.R'
+    'combinators.R'
+    'utils.R'
+    'combined_parsers.R'
+    'primitive_parsers.R'

@@ -1,5 +1,4 @@
-# Composed parsers
-join <- lambda(x, paste(unlist(x), collapse = ""))
+join <- function(x) paste(unlist(x), collapse = "")
 
 #' Zero-or-more combinator
 #' @param p A parser.
@@ -40,7 +39,9 @@ zero_or_one <- function(p) p %|% success("")
 #' @export
 string <- function(str0) {
   if (str0 == "") return(success(""))
-  list(x, xs) %<-% carStr(str0)
+  y <- carStr(str0)
+  x <- if_else(is_empty(y), NULL, y[[1]])
+  xs <- if_else(is_empty(y), list(), y[[2]])
   (literal(x) %then% string(xs)) %using% join
 }
 
@@ -48,7 +49,10 @@ string <- function(str0) {
 #' @description Match any element in a vector.
 #' @param cs A character vector.
 #' @export
-one_of <- function(cs) satisfy(lambda(x, x %in% cs))
+one_of <- function(cs) {
+  f <- function(x) x %in% cs
+  satisfy(f)
+}
 
 
 #' #' High-order combinator

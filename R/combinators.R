@@ -3,12 +3,19 @@
 #' @param p1 A parser.
 #' @param p2 A parser.
 #' @export
-`%alt%` <- function(p1, p2) lambda(p1(inp) %++% p2(inp))
+`%alt%` <- function(p1, p2) {
+  function(inp) (p1(inp) %++% p2(inp))
+}
 
 #' Or combinator (with single parsing result)
-`%|%` <- function(p, q) {
-  function(cs) {
-    x <- (p %alt% q)(cs)
+#' @name or-combinator
+#' @description Success if any of the parsers returns success.
+#' @param p1 A parser.
+#' @param p2 A parser.
+#' @export
+`%|%` <- function(p1, p2) {
+  function(inp) {
+    x <- (p1 %alt% p2)(inp)
     if (is_empty(x)) {
       return(x)
     } else {
@@ -27,9 +34,11 @@
   function(inp) {
     res <- list()
     for (x in p1(inp)) {
-      list(v1, out1) %<-% x
+      v1 <- if_else(is_empty(x), NULL, x[[1]])
+      out1 <- if_else(is_empty(x), list(), x[[2]])
       for (y in p2(out1)) {
-        list(v2, out2) %<-% y
+        v2 <- if_else(is_empty(y), NULL, y[[1]])
+        out2 <- if_else(is_empty(y), list(), y[[2]])
         res[[length(res) + 1]] <- list(list(v1, v2), out2)
       }
     }
@@ -39,20 +48,26 @@
 
 #' @rdname then-combinator
 #' @examples
-#' p12 <- xthen(string("extract"), string("THIS"))
+#' p12 <- string("extract") %xthen% string("THIS")
 #' p12("extractTHISpart")  # success:  list("THIS", "part"))
 #' p12("BBCDE")  #   fail :  list()
 #' @export
-`%xthen%` <- function(p1, p2) (p1 %then% p2) %using% lambda(x[[2]])
+`%xthen%` <- function(p1, p2) {
+  f <- function(x) x[[2]]
+  (p1 %then% p2) %using% f
+}
 
 #' @rdname then-combinator
 #' @examples
-#' p12 <- thenx(string("keepthis"), string("IGNORE"))
+#' p12 <- string("keepthis") %thenx% string("IGNORE")
 #' p12("keepthisIGNORE")          # success:  list("keepthis", ""))
 #' p12("keepthisIGNOREcontinue")  # success:  list("keepthis", "continue"))
 #' p12("BBCDE")  # fail :  list()
 #' @export
-`%thenx%` <- function(p1, p2) (p1 %then% p2) %using% lambda(x[[1]])
+`%thenx%` <- function(p1, p2) {
+  f <- function(x) x[[1]]
+  (p1 %then% p2) %using% f
+}
 
 #' Constructor combinator
 #' @description Allows chaining with a constructor function that parses the
@@ -63,7 +78,8 @@
 `%using%` <- function(p, f) {
   function(inp) {
     Map(p(inp), f = function(x) {
-      list(v, out) %<-% x
+      v <- if_else(is_empty(x), NULL, x[[1]])
+      out <- if_else(is_empty(x), list(), x[[2]])
       list(f(v), out)
     })
   }

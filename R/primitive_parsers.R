@@ -1,6 +1,8 @@
-success <- lambda(v, lambda(p, list(list(v, p))))
+success <- function(v) {
+  function(inp) list(list(v, inp))
+}
 
-fail <- lambda(inp, list())
+fail <- function(inp) list()
 
 #' Satisfy parser constructor
 #' @param predicate A predicate function.
@@ -9,7 +11,9 @@ satisfy <- function(predicate) {
   function(inp) {
     if (is_empty(inp)) return(fail())
 
-    list(x, xs) %<-% carStr(inp)
+    y <- carStr(inp)
+    x <- if_else(is_empty(y), NULL, y[[1]])
+    xs <- if_else(is_empty(y), list(), y[[2]])
     if (predicate(x)) {
       return(success(x)(xs))
     } else {
@@ -20,6 +24,9 @@ satisfy <- function(predicate) {
 
 #' Literal parser
 #' @description Match any single character.
-#' @param predicate A predicate function.
+#' @param ch A character.
 #' @export
-literal <- function(x) satisfy(lambda(v, v == x))
+literal <- function(ch) {
+  f <- function(v) v == ch
+  satisfy(f)
+}
