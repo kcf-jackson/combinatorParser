@@ -2,12 +2,15 @@
 % Please edit documentation in R/combinators.R
 \name{then-combinator}
 \alias{then-combinator}
-\alias{\%then\%}
+\alias{\%&\%}
+\alias{\%join\%}
 \alias{\%xthen\%}
 \alias{\%thenx\%}
 \title{And(-then) combinator and variants}
 \usage{
-p1 \%then\% p2
+p1 \%&\% p2
+
+p1 \%join\% p2
 
 p1 \%xthen\% p2
 
