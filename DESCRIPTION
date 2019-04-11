@@ -1,7 +1,7 @@
 Package: combinatorParser
 Type: Package
 Title: Build parser with ease!
-Version: 0.2.4
+Version: 0.2.5
 Author: Chun Fung (Jackson) Kwok
 Maintainer: Chun Fung (Jackson) Kwok <kcf.jackson@gmail.com>
 Description: An implementation of combinator parser in R.
@@ -16,5 +16,6 @@ Collate:
     'character_classes.R'
     'combinators.R'
     'utils.R'
-    'combined_parsers.R'
+    'combinators_recursion.R'
     'primitive_parsers.R'
+    'tools.R'
