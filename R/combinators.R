@@ -4,7 +4,9 @@
 #' @param p2 A parser.
 #' @export
 `%alt%` <- function(p1, p2) {
-  function(inp) (p1(inp) %++% p2(inp))
+  function(inp) {
+    append(p1(inp), p2(inp))
+  }
 }
 
 #' Or combinator (with single parsing result)
@@ -15,9 +17,14 @@
 #' @export
 `%|%` <- function(p1, p2) {
   function(inp) {
-    x <- (p1 %alt% p2)(inp)
+    x <- p1(inp)
     if (is_empty(x)) {
-      return(x)
+      y <- p2(inp)
+      if (is_empty(y)) {
+        return(y)
+      } else {
+        return(y[1])
+      }
     } else {
       return(x[1])
     }
@@ -30,7 +37,7 @@
 #' @param p2 A parser.
 #' @name then-combinator
 #' @export
-`%then%` <- function(p1, p2) {
+`%&%` <- `%then%` <- function(p1, p2) {
   function(inp) {
     res <- list()
     for (x in p1(inp)) {
@@ -44,6 +51,28 @@
     }
     res
   }
+}
+
+#' Constructor combinator
+#' @description Allows chaining with a constructor function that parses the
+#' matched results into an AST
+#' @param p A parser.
+#' @param f A function; typically a constructor of a datatype.
+#' @export
+`%using%` <- function(p, f) {
+  function(inp) {
+    Map(p(inp), f = function(x) {
+      v <- if_else(is_empty(x), NULL, x[[1]])
+      out <- if_else(is_empty(x), list(), x[[2]])
+      list(f(v), out)
+    })
+  }
+}
+
+#' @rdname then-combinator
+#' @export
+`%join%` <- function(p1, p2) {
+  (p1 %then% p2) %using% join
 }
 
 #' @rdname then-combinator
@@ -67,20 +96,4 @@
 `%thenx%` <- function(p1, p2) {
   f <- function(x) x[[1]]
   (p1 %then% p2) %using% f
-}
-
-#' Constructor combinator
-#' @description Allows chaining with a constructor function that parses the
-#' matched results into an AST
-#' @param p A parser.
-#' @param f A function; typically a constructor of a datatype.
-#' @export
-`%using%` <- function(p, f) {
-  function(inp) {
-    Map(p(inp), f = function(x) {
-      v <- if_else(is_empty(x), NULL, x[[1]])
-      out <- if_else(is_empty(x), list(), x[[2]])
-      list(f(v), out)
-    })
-  }
 }
