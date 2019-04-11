@@ -11,7 +11,7 @@ satisfy <- function(predicate) {
   function(inp) {
     if (is_empty(inp)) return(fail())
 
-    y <- carStr(inp)
+    y <- car_str(inp)
     x <- if_else(is_empty(y), NULL, y[[1]])
     xs <- if_else(is_empty(y), list(), y[[2]])
     if (predicate(x)) {
@@ -27,6 +27,5 @@ satisfy <- function(predicate) {
 #' @param ch A character.
 #' @export
 literal <- function(ch) {
-  f <- function(v) v == ch
-  satisfy(f)
+  satisfy(function(v) { v == ch })
 }

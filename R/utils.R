@@ -1,8 +1,8 @@
-`%++%` <- append
+is_empty <- function(x) {
+  identical(x, list())
+}
 
-is_empty <- function(x) identical(x, list())
-
-carStr <- function(x) {
+car_str <- function(x) {
   list(substring(x, 1, 1), substring(x, 2))
 }
 

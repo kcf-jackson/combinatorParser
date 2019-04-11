@@ -1,5 +1,3 @@
-# Classes of characters
-
 #' Digits
 #' @export
 digit <- as.character(0:9)
