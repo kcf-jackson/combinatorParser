@@ -33,6 +33,7 @@ report <- function(f) {
 #' msum_s <- memoise(msum_s %then% msum_s) %|% term_s
 #' msum_s("ss")
 #' }
+#' @export
 memoise <- function(p) {
   table0 <- list()
   attempt_table0 <- list()
